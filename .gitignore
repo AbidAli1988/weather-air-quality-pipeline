@@ -9,3 +9,4 @@ logs/
 target/
 dbt_packages/
 profiles.yml
+*.duckdb
