@@ -8,31 +8,40 @@ RAW_PATH = Path("data/raw")
 
 
 def load_latest_file():
-    files = list(RAW_PATH.glob("airnow_*.json"))
+    files = list(RAW_PATH.glob("airnow_multi_*.json"))
     if not files:
-        raise Exception("No AirNow raw files found")
+        raise Exception("No multi-city AirNow files found")
 
     latest_file = max(files, key=lambda x: x.stat().st_mtime)
     print(f"Loading file: {latest_file}")
 
     with open(latest_file) as f:
-        data = json.load(f)
-
-    return data
+        return json.load(f)
 
 
-def load_to_duckdb(data):
-    con = duckdb.connect("weather.duckdb")
-
+def transform(data):
     df = pd.DataFrame(data)
 
+    # Flatten Category field
+    if "Category" in df.columns:
+        df["Category"] = df["Category"].apply(lambda x: x.get("Name") if isinstance(x, dict) else x)
+
+    return df
+
+
+def load_to_duckdb(df):
+    con = duckdb.connect("weather.duckdb")
+
+    con.execute("DROP TABLE IF EXISTS airnow_raw")
+
     con.execute("""
-        CREATE TABLE IF NOT EXISTS airnow_raw (
+        CREATE TABLE airnow_raw (
+            city TEXT,
+            state TEXT,
             DateObserved DATE,
             HourObserved INTEGER,
             LocalTimeZone TEXT,
             ReportingArea TEXT,
-            StateCode TEXT,
             Latitude DOUBLE,
             Longitude DOUBLE,
             ParameterName TEXT,
@@ -46,16 +55,17 @@ def load_to_duckdb(data):
     con.execute("""
         INSERT INTO airnow_raw
         SELECT
+            city,
+            state,
             DateObserved,
             HourObserved,
             LocalTimeZone,
             ReportingArea,
-            StateCode,
             Latitude,
             Longitude,
             ParameterName,
             AQI,
-            Category.Name AS Category
+            Category
         FROM airnow_df
     """)
 
@@ -63,5 +73,6 @@ def load_to_duckdb(data):
 
 
 if __name__ == "__main__":
-    data = load_latest_file()
-    load_to_duckdb(data)
+    raw = load_latest_file()
+    df = transform(raw)
+    load_to_duckdb(df)

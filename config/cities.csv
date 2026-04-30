@@ -1,13 +1,13 @@
-city,state,latitude,longitude
-Nashville,TN,36.1627,-86.7816
-Atlanta,GA,33.7490,-84.3880
-Chicago,IL,41.8781,-87.6298
-Dallas,TX,32.7767,-96.7970
-Los Angeles,CA,34.0522,-118.2437
-New York,NY,40.7128,-74.0060
-Phoenix,AZ,33.4484,-112.0740
-Denver,CO,39.7392,-104.9903
-Seattle,WA,47.6062,-122.3321
-Miami,FL,25.7617,-80.1918
-Salt Lake City,UT,40.7608,-111.8910
-San Francisco,CA,37.7749,-122.4194
+city,state,county,latitude,longitude
+Nashville,TN,Davidson,36.1627,-86.7816
+Atlanta,GA,Fulton,33.7490,-84.3880
+Chicago,IL,Cook,41.8781,-87.6298
+Dallas,TX,Dallas,32.7767,-96.7970
+Los Angeles,CA,Los Angeles,34.0522,-118.2437
+New York,NY,New York,40.7128,-74.0060
+Phoenix,AZ,Maricopa,33.4484,-112.0740
+Denver,CO,Denver,39.7392,-104.9903
+Seattle,WA,King,47.6062,-122.3321
+Miami,FL,Miami Dade,25.7617,-80.1918
+Salt Lake City,UT,Salt Lake,40.7608,-111.8910
+San Francisco,CA,San Francisco,37.7749,-122.4194
